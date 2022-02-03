@@ -36,7 +36,7 @@
                   "version": "4.8.1-arduino5"
                 },
                 {
-                  "packager": "tinyruler",
+                  "packager": "crbk",
                   "name": "micronucleus",
                   "version": "2.0a4"
                 }
