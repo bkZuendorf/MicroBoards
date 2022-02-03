@@ -53,8 +53,8 @@
                  "host": "i686-mingw32",
                  "archiveFileName": "micronucleus-win.zip",
                   "url": "https://github.com/bkZuendorf/MicroBoards/raw/main/tools/micronucleus-win-2.0a4.zip",
-                 "checksum": "SHA-256:3055F0C159E398DC365C28A262BE73484DB43EADE0901DB6154285C35AF4AD4E",
-                 "size": "31911"
+                 "checksum": "SHA-256:C3103C42A508A195852913CD823EF95895BC397738E422BCCC345250E3ED1C67",
+                 "size": "397117"
                }
               ]
              }
