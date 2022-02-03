@@ -14,7 +14,7 @@
               "name": "CRBK Mikrocontroller Boards",
               "architecture": "avr",
               "version": "0.1.0",
-              "category": "Tinyruler",
+              "category": "CRBK µC-Boards",
               "url": "https://github.com/bkZuendorf/MicroBoards/raw/main/releases/CRBK-MicroBoards_0.1.0.zip",
               "archiveFileName": "CRBK-MicroBoards_0.1.0.zip",
               "checksum": "SHA-256:2F4691AECBC5BDCA231EBB3A938E82D4392CD56DA6DD9ABA65AED081A96F0F56",
