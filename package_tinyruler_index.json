@@ -1,0 +1,64 @@
+{
+   "packages":[
+      {
+         "name":"tinyruler",
+         "maintainer":"CRBK",
+         "websiteURL":"http://abitur-am-berufskolleg.info",
+         "email":"zuendorf@abitur-am-berufskolleg.info",
+         "help":{
+            "online":"https://abitur-am-berufskolleg.info"
+         },
+         "platforms":
+         [
+            {
+              "name": "CRBK Mikrocontroller Boards",
+              "architecture": "avr",
+              "version": "0.1.0",
+              "category": "Tinyruler",
+              "url": "file://C:/Users/ms/OneDrive - Carl-Reuther-Berufskolleg des Rhein-Sieg-Kreises/Inhalte/ET/Mikrocontroller/TinyRuler/packageeinfos/tinyruler.zip",
+              "archiveFileName": "tinyruler.zip",
+              "checksum": "SHA-256:2F4691AECBC5BDCA231EBB3A938E82D4392CD56DA6DD9ABA65AED081A96F0F56",
+              "size": "77332",
+              "help": {
+                "online": "https://github.com/bkZuendorf/MicroBoards#readme"
+              },
+              "boards": 
+              [
+                {
+                      "name": "Tinyruler (v1)"
+                }
+              ],
+              "toolsDependencies": 
+              [
+                {
+                  "packager": "arduino",
+                  "name": "avr-gcc",
+                  "version": "4.8.1-arduino5"
+                },
+                {
+                  "packager": "tinyruler",
+                  "name": "micronucleus",
+                  "version": "2.0a4"
+                }
+              ]
+            }
+        ],
+        "tools":
+        [
+            {
+             "name": "micronucleus",
+             "version": "2.0a4",
+             "systems": [
+               {
+                 "host": "i686-mingw32",
+                 "archiveFileName": "micronucleus-win.zip",
+                  "url": "file://C:/Users/ms/OneDrive - Carl-Reuther-Berufskolleg des Rhein-Sieg-Kreises/Inhalte/ET/Mikrocontroller/TinyRuler/packageeinfos/micronucleus-win.zip",
+                 "checksum": "SHA-256:3055F0C159E398DC365C28A262BE73484DB43EADE0901DB6154285C35AF4AD4E",
+                 "size": "31911"
+               }
+              ]
+             }
+         ]
+      }
+   ]
+}

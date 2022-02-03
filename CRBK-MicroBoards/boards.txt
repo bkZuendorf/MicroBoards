@@ -1,0 +1,24 @@
+# See: http://code.google.com/p/arduino/wiki/Platforms
+
+menu.cpu=Processor
+
+##############################################################
+
+
+
+
+tinyruler-tiny84.name=Tinyruler
+tinyruler-tiny84.upload.using=micronucleusprog
+tinyruler-tiny84.upload.protocol=usb
+tinyruler-tiny84.upload.tool=micronucleus
+tinyruler-tiny84.upload.maximum_size=6012
+tinyruler-tiny84.build.mcu=attiny84
+tinyruler-tiny84.build.f_cpu=16500000L
+tinyruler-tiny84.build.board=AVR_TINYRULER
+tinyruler-tiny84.build.core=tiny
+tinyruler-tiny84.build.variant=tinyruler
+tinyruler-tiny84.upload.wait_for_upload_port = false
+tinyruler-tiny84.upload.use_1200bps_touch = false
+tinyruler-tiny84.upload.disable_flushing = false
+
+
