@@ -36,7 +36,7 @@
                   "version": "4.8.1-arduino5"
                 },
                 {
-                  "packager": "crbk",
+                  "packager": "CRBK µC-Boards",
                   "name": "micronucleus",
                   "version": "2.0a4"
                 }
