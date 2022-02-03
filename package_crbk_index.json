@@ -15,7 +15,7 @@
               "architecture": "avr",
               "version": "0.1.0",
               "category": "Tinyruler",
-              "url": "https://github.com/bkZuendorf/MicroBoards/blob/eedd97a38d83193fe06cde20298ab288053ace1b/releases/CRBK-MicroBoards_0.1.0.zip",
+              "url": "https://github.com/bkZuendorf/MicroBoards/raw/main/releases/CRBK-MicroBoards_0.1.0.zip",
               "archiveFileName": "CRBK-MicroBoards_0.1.0.zip",
               "checksum": "SHA-256:2F4691AECBC5BDCA231EBB3A938E82D4392CD56DA6DD9ABA65AED081A96F0F56",
               "size": "77332",
@@ -52,7 +52,7 @@
                {
                  "host": "i686-mingw32",
                  "archiveFileName": "micronucleus-win.zip",
-                  "url": "https://github.com/bkZuendorf/MicroBoards/blob/eedd97a38d83193fe06cde20298ab288053ace1b/tools/micronucleus-win-2.0a4.zip",
+                  "url": "https://github.com/bkZuendorf/MicroBoards/raw/main/tools/micronucleus-win-2.0a4.zip",
                  "checksum": "SHA-256:3055F0C159E398DC365C28A262BE73484DB43EADE0901DB6154285C35AF4AD4E",
                  "size": "31911"
                }
