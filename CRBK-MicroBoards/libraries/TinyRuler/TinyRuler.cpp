@@ -7,8 +7,6 @@
 
 #include "TinyRuler.h"
 
-void gotoSleep();
-
 //const int outs[]= {PA0, PA1, PA2, PA3, PA5};
 const int outs[]= {PORTA0, PORTA1, PORTA2, PORTA3, PORTA5};
 const int outCnt = 5;
@@ -59,7 +57,7 @@ Animation::Animation() {
 }
 
 void Animation::start() { cnt=0; step=0; laststep=0;}
-void Animation::stop() { tr.allOff(); }
+void Animation::stop() { tr.resetAll(); }
 unsigned char Animation::cycles() const { return cnt;  }
   
 unsigned char Animation::Do(Animation* pAni) {
@@ -89,9 +87,9 @@ Flash::Flash() { maxStepCnt=2; transitionTime=20; }
 bool Flash::handle() {
   if(isNextStep()==true) {
     if(!step)
-      tr.allOff();
+      tr.resetAll();
     else {
-      tr.allOn();
+      tr.setAll();
     }
     return true;
   }
@@ -123,7 +121,7 @@ bool Run::handle() {
   return false;
 }
 
-void TinyRuler::setup() {
+void TinyRuler::init() {
   cli();
   
   PORTA = 0;
@@ -139,7 +137,7 @@ void TinyRuler::setup() {
   sei();    
 }
 
-void TinyRuler::loop() {
+void TinyRuler::animate() {
   int sensor =(PINA & (1<<PORTA7));
   if(letzterSensorWert!=sensor) {
     letzterSensorwertWechsel=millis();
@@ -168,10 +166,9 @@ void TinyRuler::loop() {
         gotoSleep();
     } 
   }
-    
 }
 
-void TinyRuler::allOn() {
+void TinyRuler::setAll() {
   unsigned char o=0;
   for(int i=0; i< outCnt; i++) {
     o |= 1<<outs[i];
@@ -179,7 +176,7 @@ void TinyRuler::allOn() {
   PORTA |= o;
 }
 
-void TinyRuler::allOff() {
+void TinyRuler::resetAll() {
   unsigned char o=0;
   for(int i=0; i< outCnt; i++) {
     o |= 1<<outs[i];
@@ -187,12 +184,28 @@ void TinyRuler::allOff() {
   PORTA &=~o;
 }
 
+void TinyRuler::set(int index) {
+  if(index<0 || index >=outCnt) return;
+
+  PORTA |= (1<<outs[index]);
+}
+
+void TinyRuler::reset(int index) {
+  if(index<0 || index >=outCnt) return;
+
+  PORTA &= ~(1<<outs[index]);
+}
+
+bool TinyRuler::getSensorStatus() {
+  return (PINA & (1<<PORTA7))!=0;
+}
+
 //Attiny in den Schlafmodus setzen
-void gotoSleep()
+void TinyRuler::gotoSleep()
 {
   aufgewacht=false;
   PORTB|=(1<<PORTB2);
-  tr.allOff();
+  resetAll();
   
   cli();                      // Disable interrupts  
     GIFR &= ~(1<<PCIF0);

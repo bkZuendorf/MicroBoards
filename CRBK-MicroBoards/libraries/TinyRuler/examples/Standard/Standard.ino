@@ -2,12 +2,11 @@
 
 TinyRuler ruler;
 
-void setup() 
-{
-  ruler.setup();
+void setup() {
+  ruler.init();
 }
 
 void loop()
 {
-  ruler.loop();
+  ruler.animate();
 }

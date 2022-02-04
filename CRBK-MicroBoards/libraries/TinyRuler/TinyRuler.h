@@ -2,11 +2,16 @@
 #define _TINYRULER_H_
 
 class TinyRuler {
+	void gotoSleep();
 public:
-    void setup();
-    void loop();
-    void allOn();
-    void allOff();
+    void init();
+    void animate();
+
+    void setAll();
+    void resetAll();
+    void set(int index);
+    void reset(int index);
+    bool getSensorStatus();
 };
 
 class Animation {
