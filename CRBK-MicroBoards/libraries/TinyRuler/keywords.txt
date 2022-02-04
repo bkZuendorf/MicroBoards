@@ -14,6 +14,7 @@ TinyRuler	KEYWORD1
 
 
 animate			KEYWORD2
+handle			KEYWORD2
 init			KEYWORD2
 setAll			KEYWORD2
 resetAll		KEYWORD2

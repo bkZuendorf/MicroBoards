@@ -5,6 +5,7 @@ class TinyRuler {
 	void gotoSleep();
 public:
     void init();
+    void handle();
     void animate();
 
     void setAll();

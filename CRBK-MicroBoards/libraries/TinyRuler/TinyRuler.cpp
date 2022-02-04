@@ -168,6 +168,26 @@ void TinyRuler::animate() {
   }
 }
 
+void TinyRuler::handle() {
+  int sensor =(PINA & (1<<PORTA7));
+  if(letzterSensorWert!=sensor) {
+    letzterSensorwertWechsel=millis();
+    letzterSensorWert=sensor;
+  }
+  else if((millis()-letzterSensorwertWechsel)>500) {
+    stabilerSensorWert = letzterSensorWert;
+  }
+  
+  if(millis()>10000) {
+    // gehe in den Schlaf wenn der Lagesensonor 10s nach der Startphase
+	// eindeutiges Signal liefert
+    if(stabilerSensorWert>=0)
+      aufgewacht=false;
+    else if((millis()-letzterSensorwertWechsel)>5000)
+      gotoSleep();
+  } 
+}
+
 void TinyRuler::setAll() {
   unsigned char o=0;
   for(int i=0; i< outCnt; i++) {
