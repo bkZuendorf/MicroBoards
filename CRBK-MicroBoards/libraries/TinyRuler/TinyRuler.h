@@ -2,17 +2,24 @@
 #define _TINYRULER_H_
 
 class TinyRuler {
-	void gotoSleep();
+    void gotoSleep();
+    static int          stabilerSensorWert;
+    static bool         letzterSensorWert;
+    static unsigned int letzterSensorwertWechsel;
+
 public:
     void init();
-    void handle();
+    bool handle(unsigned int sleepDelay=1000);
     void animate();
 
     void setAll();
     void resetAll();
+    void setStatus();
+    void resetStatus();
     void set(int index);
     void reset(int index);
-    bool getSensorStatus();
+    bool getSensorValue();
+    bool getSensor();
 };
 
 class Animation {

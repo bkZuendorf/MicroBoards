@@ -20,6 +20,8 @@ setAll			KEYWORD2
 resetAll		KEYWORD2
 set				KEYWORD2
 reset			KEYWORD2
+setStatus		KEYWORD2
+resetStatus		KEYWORD2
 getSensorStatus	KEYWORD2
 
 #######################################

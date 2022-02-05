@@ -15,18 +15,15 @@ Run   defaultAnimation;
 Flash flash;
 TinyRuler tr;
 
+int          TinyRuler::stabilerSensorWert=-1;
+bool         TinyRuler::letzterSensorWert=false;
+unsigned int TinyRuler::letzterSensorwertWechsel=0;
 
 // Zustände
-int stabilerSensorWert=-1;
-int letzterSensorWert=0;
-unsigned int letzterSensorwertWechsel=0;
-bool aufgewacht=false;
-
 ISR(PCINT0_vect)
 {
   GIFR &= ~(1<<PCIF0);
 }
-
 
 bool Animation::isNextStep() {
     if((millis() - lastTransition) > transitionTime) {
@@ -126,41 +123,25 @@ void TinyRuler::init() {
   
   PORTA = 0;
   DDRA = 1<<DDA0 | 1<<DDA1 | 1<<DDA2 | 1<<DDA3 | 1<<DDA5;
-  DDRB = 1 <<DDB2;
+  DDRB = 1<<DDB2;
       
-  GIMSK = 1<<PCIE0;             // Enable Pin Change Interrupts
-  PCMSK0 = 1<<PCINT7;           // Use PA7 as interrupt pin
-  GIFR &= ~(1<<PCIF0);          // Reset pin change interrupt flag
-
-  PORTB|=(1<<PORTB2); // Status LED ausschalten);
-  
-  sei();    
+  GIMSK = 1<<PCIE0;         // Enable Pin Change Interrupts
+  PCMSK0 = 1<<PCINT7;       // Use PA7 as interrupt pin
+  GIFR &= ~(1<<PCIF0);      // Reset pin change interrupt flag
+ 
+  sei();
 }
 
 void TinyRuler::animate() {
-  int sensor =(PINA & (1<<PORTA7));
-  if(letzterSensorWert!=sensor) {
-    letzterSensorwertWechsel=millis();
-    letzterSensorWert=sensor;
-  }
-  else if((millis()-letzterSensorwertWechsel)>500) {
-    stabilerSensorWert = letzterSensorWert;
-  }
-  
+  bool aufgewacht = handle();
+ 
   if(millis()<5000) {
     // StartPhase
     Animation::Do(&defaultAnimation);
-  } else if(aufgewacht==true) {
-    if(stabilerSensorWert>=0)
-      aufgewacht=false;
-    else if((millis()-letzterSensorwertWechsel)>700)
-      gotoSleep();
   } else {
-    if(stabilerSensorWert==0) {
-      PORTB|=(1<<PORTB2);
+    if(!getSensor()) {
       Animation::Do(&defaultAnimation);
-    } else if(stabilerSensorWert>0) {
-      PORTB&=~(1<<PORTB2);
+    } else {
       // Lineal liegt, bereite schlafen vor
       if(Animation::Do(&flash)==20)
         gotoSleep();
@@ -168,24 +149,28 @@ void TinyRuler::animate() {
   }
 }
 
-void TinyRuler::handle() {
-  int sensor =(PINA & (1<<PORTA7));
+bool TinyRuler::handle(unsigned int sleepDelay) {
+  bool geradeErwacht = false;
+  bool sensor = getSensorValue();
   if(letzterSensorWert!=sensor) {
     letzterSensorwertWechsel=millis();
     letzterSensorWert=sensor;
-  }
-  else if((millis()-letzterSensorwertWechsel)>500) {
-    stabilerSensorWert = letzterSensorWert;
+    stabilerSensorWert=-1;
+  } else if((millis()-letzterSensorwertWechsel)>500) {
+    stabilerSensorWert = letzterSensorWert ? 1 : 0;
   }
   
-  if(millis()>10000) {
-    // gehe in den Schlaf wenn der Lagesensonor 10s nach der Startphase
-	// eindeutiges Signal liefert
-    if(stabilerSensorWert>=0)
-      aufgewacht=false;
-    else if((millis()-letzterSensorwertWechsel)>5000)
+  if(millis()>5000) {
+    // gehe in den Schlaf wenn der Lagesensor 5s nach der Startphase
+    // eindeutiges Signal liefert, oder wenn 20 Sekunden lang nichts passiert ist
+    if( (stabilerSensorWert==1 && (millis()-letzterSensorwertWechsel)>sleepDelay) ||
+        (millis()-letzterSensorwertWechsel)>20000) {
       gotoSleep();
-  } 
+      geradeErwacht=true;
+    } 
+  }
+  
+  return geradeErwacht;
 }
 
 void TinyRuler::setAll() {
@@ -216,15 +201,27 @@ void TinyRuler::reset(int index) {
   PORTA &= ~(1<<outs[index]);
 }
 
-bool TinyRuler::getSensorStatus() {
+void TinyRuler::setStatus() {
+   PORTB&=~(1<<PORTB2);
+}
+
+void TinyRuler::resetStatus() {
+   PORTB|=(1<<PORTB2);
+}
+
+bool TinyRuler::getSensorValue() {
   return (PINA & (1<<PORTA7))!=0;
+}
+
+bool TinyRuler::getSensor() {
+  // gibt den stabilen Sensorwert zurück, falls nicht vorhanden, den instabilen Wert
+  return stabilerSensorWert>=0 ? (stabilerSensorWert==1) : getSensorValue();
 }
 
 //Attiny in den Schlafmodus setzen
 void TinyRuler::gotoSleep()
 {
-  aufgewacht=false;
-  PORTB|=(1<<PORTB2);
+  resetStatus();
   resetAll();
   
   cli();                      // Disable interrupts  
@@ -239,7 +236,7 @@ void TinyRuler::gotoSleep()
     MCUCR &=~(1 << SE); //    sleep_disable();                        // Clear SE bit
   sei();                      // Enable interrupts
   
-  aufgewacht=true;
-  letzterSensorwertWechsel=millis();
+  setStatus();
+  letzterSensorwertWechsel = millis();
   stabilerSensorWert=-1;
 }
