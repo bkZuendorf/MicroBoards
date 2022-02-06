@@ -195,6 +195,20 @@ void TinyRuler::set(int index) {
   PORTA |= (1<<outs[index]);
 }
 
+bool TinyRuler::get(int index) {
+  if(index<0 || index >=outCnt) return false;
+
+  return (PORTA & (1<<outs[index]))!=0;
+}
+
+bool TinyRuler::toggle(int index) {
+  if(index<0 || index >=outCnt) return false;
+
+  if(get(index)) reset(index);
+  else set(index);
+  return get(index);
+}
+
 void TinyRuler::reset(int index) {
   if(index<0 || index >=outCnt) return;
 

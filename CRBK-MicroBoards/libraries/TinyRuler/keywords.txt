@@ -19,6 +19,8 @@ init			KEYWORD2
 setAll			KEYWORD2
 resetAll		KEYWORD2
 set				KEYWORD2
+get				KEYWORD2
+toggle			KEYWORD2
 reset			KEYWORD2
 setStatus		KEYWORD2
 resetStatus		KEYWORD2

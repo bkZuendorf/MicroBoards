@@ -17,6 +17,8 @@ public:
     void setStatus();
     void resetStatus();
     void set(int index);
+    bool get(int index);
+    bool toggle(int index);
     void reset(int index);
     bool getSensorValue();
     bool getSensor();

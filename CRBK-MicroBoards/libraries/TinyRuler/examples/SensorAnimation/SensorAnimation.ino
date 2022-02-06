@@ -11,20 +11,27 @@ void setup() {
 
 void loop()
 {
+  // true zeigt liegende Position an
   bool sensor = ruler.getSensor();
-  
-  int multiplier = sensor ? 10 : 1;
-  
-  ruler.resetAll();
-  if(set)
-    ruler.set(index);
-  else
-    ruler.reset(index);
 
-  index++;
-  index=index%5;
-  if(!index) set=!set;
-  delay(10*multiplier);
+  if(sensor) {
+    // wenn es liegt, die LEDs einzeln umschalten
+    ruler.toggle(index);
+    delay(100);
+  } else {
+    // andernfalls nur blinken lassen
+    if(ruler.get(0)) {
+      ruler.resetAll();
+    } else {
+      ruler.setAll();
+    }
+    delay(10);
+  }
+    
+  index=(index+1)%5;
 
-  ruler.handle(5000);
+  // rufe handle auf, damit sich das Lineal nach einer Zeit schlafen legen kann
+  // und automatisch wieder aufwacht
+  // hier: Lasse Lineal 2 Sekunden nach dem Erkennen der Lage in den Schlafmodus wechseln
+  ruler.handle(2000);
 }
