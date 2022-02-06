@@ -5,7 +5,7 @@ class TinyRuler {
     void gotoSleep();
     static int          stabilerSensorWert;
     static bool         letzterSensorWert;
-    static unsigned int letzterSensorwertWechsel;
+    static unsigned long letzterSensorwertWechsel;
 
 public:
     void init();

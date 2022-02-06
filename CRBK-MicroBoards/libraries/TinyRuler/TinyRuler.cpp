@@ -16,9 +16,9 @@ Run   defaultAnimation;
 Flash flash;
 TinyRuler tr;
 
-int          TinyRuler::stabilerSensorWert=-1;
-bool         TinyRuler::letzterSensorWert=false;
-unsigned int TinyRuler::letzterSensorwertWechsel=0;
+int           TinyRuler::stabilerSensorWert = -1;
+bool          TinyRuler::letzterSensorWert = false;
+unsigned long TinyRuler::letzterSensorwertWechsel = 0;
 
 // ATTiny 84SSU mit 8 MHz
 #define F_CPU 8000000UL
@@ -38,7 +38,6 @@ unsigned long mymillis()
 {
   return millis();
 }
-
 #endif
 
 
@@ -267,19 +266,25 @@ bool TinyRuler::getSensor() {
 //Attiny in den Schlafmodus setzen
 void TinyRuler::gotoSleep()
 {
-  resetStatus();
+  // reset all Display-LEDs to reduce power
   resetAll();
+  // reset status LED
+  resetStatus();
 
-  MCUCR |= (1 << SM1); // set_sleep_mode(SLEEP_MODE_PWR_DOWN);   
-  MCUCR |= (1 << SE); //  sleep_enable();                        Sets the Sleep Enable bit in the MCUCR Register (SE BIT)
+  MCUCR |= (1 << SM1);                 // set_sleep_mode(SLEEP_MODE_PWR_DOWN);   
+  MCUCR |= (1 << SE);                  // sets the Sleep Enable bit in the MCUCR Register (SE BIT)
   MCUCR |= (1 << BODS) | (1 << BODSE); // Step 1 to disable BOD
-  MCUCR &= ~(1 << BODSE); // Step 2 to disable BOD
+  MCUCR &= ~(1 << BODSE);              // Step 2 to disable BOD
   
-  sleep_cpu();                // sleep
+  sleep_cpu();                         // sleep
 
-  MCUCR &=~(1 << SE);       //    sleep_disable();  -> Clear SE bit
+  MCUCR &=~(1 << SE);                  // clear Sleep Enable bit
   
+  // set status LED
   setStatus();
+  
+   // init sensor state variables
   letzterSensorwertWechsel = mymillis();
-  stabilerSensorWert=-1;
+  letzterSensorWert = getSensorValue();
+  stabilerSensorWert = -1;
 }
