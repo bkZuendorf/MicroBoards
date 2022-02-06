@@ -17,7 +17,7 @@ void loop()
   if(sensor) {
     // wenn es liegt, die LEDs einzeln umschalten
     ruler.toggle(index);
-    delay(100);
+    delay(500);
   } else {
     // andernfalls nur blinken lassen
     if(ruler.get(0)) {
@@ -25,13 +25,13 @@ void loop()
     } else {
       ruler.setAll();
     }
-    delay(10);
+    delay(50);
   }
     
   index=(index+1)%5;
 
   // rufe handle auf, damit sich das Lineal nach einer Zeit schlafen legen kann
   // und automatisch wieder aufwacht
-  // hier: Lasse Lineal 2 Sekunden nach dem Erkennen der Lage in den Schlafmodus wechseln
-  ruler.handle(2000);
+  // hier: Lasse Lineal 2,5 Sekunden nach dem Erkennen der Lage in den Schlafmodus wechseln
+  ruler.handle(2500);
 }

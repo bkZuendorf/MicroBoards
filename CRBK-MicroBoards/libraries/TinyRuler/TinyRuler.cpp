@@ -7,7 +7,8 @@
 
 #include "TinyRuler.h"
 
-//const int outs[]= {PA0, PA1, PA2, PA3, PA5};
+#define DONT_USE_MYTIMER
+
 const int outs[]= {PORTA0, PORTA1, PORTA2, PORTA3, PORTA5};
 const int outCnt = 5;
 Animation* Animation::ActiveAnimation=0;
@@ -19,14 +20,36 @@ int          TinyRuler::stabilerSensorWert=-1;
 bool         TinyRuler::letzterSensorWert=false;
 unsigned int TinyRuler::letzterSensorwertWechsel=0;
 
-// Zustände
+// ATTiny 84SSU mit 8 MHz
+#define F_CPU 8000000UL
+
+#ifdef USE_MYTIMER
+volatile unsigned long milliseconds;
+ISR(TIM0_COMPA_vect)
+{
+    milliseconds++;
+}
+unsigned long mymillis()
+{
+  return millis();//milliseconds;
+}
+#else
+unsigned long mymillis()
+{
+  return millis();
+}
+
+#endif
+
+
 ISR(PCINT0_vect)
 {
-  GIFR &= ~(1<<PCIF0);
+  // externer Interrupt
+  // GIFR |&= (1<<PCIF0); // könnte gecleart werden, wird aber laut Datenblatt automatisch
 }
 
 bool Animation::isNextStep() {
-    if((millis() - lastTransition) > transitionTime) {
+    if((mymillis() - lastTransition) > transitionTime) {
       laststep=step;
       step+=dir;
       if(step >= maxStepCnt) {
@@ -37,7 +60,7 @@ bool Animation::isNextStep() {
           step=maxStepCnt-1;          
         }
       }
-      lastTransition = millis();
+      lastTransition = mymillis();
       return true;
     }
     return false;
@@ -125,9 +148,18 @@ void TinyRuler::init() {
   DDRA = 1<<DDA0 | 1<<DDA1 | 1<<DDA2 | 1<<DDA3 | 1<<DDA5;
   DDRB = 1<<DDB2;
       
+#ifdef USE_MYTIMER
+  // start the timer 0, prescaler
+  TCCR0A = (1<<WGM01); // CTC  mode, Clear Timer on Compare Match 
+  TCCR0B = (1<<CS00)|(1<<CS01);   // Prescaler div64 -> 8µs je Zähltakt
+  OCR0A = 0.001 * F_CPU/64.0 - 1;  // 1ms, F_CPU @8MHz, div64, 8 Bit Output Compar Register
+  OCR0A = 124;
+  TIMSK0 |= (1<<OCIE0A);
+#endif
+
+  // external interrupt zum Aufwachen
   GIMSK = 1<<PCIE0;         // Enable Pin Change Interrupts
   PCMSK0 = 1<<PCINT7;       // Use PA7 as interrupt pin
-  GIFR &= ~(1<<PCIF0);      // Reset pin change interrupt flag
  
   sei();
 }
@@ -135,7 +167,7 @@ void TinyRuler::init() {
 void TinyRuler::animate() {
   bool aufgewacht = handle();
  
-  if(millis()<5000) {
+  if(mymillis()<5000) {
     // StartPhase
     Animation::Do(&defaultAnimation);
   } else {
@@ -153,18 +185,18 @@ bool TinyRuler::handle(unsigned int sleepDelay) {
   bool geradeErwacht = false;
   bool sensor = getSensorValue();
   if(letzterSensorWert!=sensor) {
-    letzterSensorwertWechsel=millis();
+    letzterSensorwertWechsel=mymillis();
     letzterSensorWert=sensor;
     stabilerSensorWert=-1;
-  } else if((millis()-letzterSensorwertWechsel)>500) {
+  } else if((mymillis()-letzterSensorwertWechsel)>500) {
     stabilerSensorWert = letzterSensorWert ? 1 : 0;
   }
   
-  if(millis()>5000) {
+  if(mymillis()>5000) {
     // gehe in den Schlaf wenn der Lagesensor 5s nach der Startphase
     // eindeutiges Signal liefert, oder wenn 20 Sekunden lang nichts passiert ist
-    if( (stabilerSensorWert==1 && (millis()-letzterSensorwertWechsel)>sleepDelay) ||
-        (millis()-letzterSensorwertWechsel)>20000) {
+    if( (stabilerSensorWert==1 && (mymillis()-letzterSensorwertWechsel)>sleepDelay) ||
+        (mymillis()-letzterSensorwertWechsel)>20000) {
       gotoSleep();
       geradeErwacht=true;
     } 
@@ -237,20 +269,17 @@ void TinyRuler::gotoSleep()
 {
   resetStatus();
   resetAll();
-  
-  cli();                      // Disable interrupts  
-    GIFR &= ~(1<<PCIF0);
-    MCUCR |= (1 << SM1); // set_sleep_mode(SLEEP_MODE_PWR_DOWN);   
-    MCUCR |= (1 << SE); //  sleep_enable();                        Sets the Sleep Enable bit in the MCUCR Register (SE BIT)
-  sei();                      // Enable interrupts
+
+  MCUCR |= (1 << SM1); // set_sleep_mode(SLEEP_MODE_PWR_DOWN);   
+  MCUCR |= (1 << SE); //  sleep_enable();                        Sets the Sleep Enable bit in the MCUCR Register (SE BIT)
+  MCUCR |= (1 << BODS) | (1 << BODSE); // Step 1 to disable BOD
+  MCUCR &= ~(1 << BODSE); // Step 2 to disable BOD
   
   sleep_cpu();                // sleep
 
-  cli();                      // Disable interrupts
-    MCUCR &=~(1 << SE); //    sleep_disable();                        // Clear SE bit
-  sei();                      // Enable interrupts
+  MCUCR &=~(1 << SE);       //    sleep_disable();  -> Clear SE bit
   
   setStatus();
-  letzterSensorwertWechsel = millis();
+  letzterSensorwertWechsel = mymillis();
   stabilerSensorWert=-1;
 }
