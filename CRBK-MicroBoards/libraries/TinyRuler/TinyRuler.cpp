@@ -144,8 +144,15 @@ void TinyRuler::init() {
   cli();
   
   PORTA = 0;
+  // LED Ausgänge
   DDRA = 1<<DDA0 | 1<<DDA1 | 1<<DDA2 | 1<<DDA3 | 1<<DDA5;
+  // Status LED
   DDRB = 1<<DDB2;
+  
+  // DDB0, DDB1 USB Eingänge
+  // DDB3, DDA4, DDA6 Programmiereingänge
+  // DDA7 Sensoreingang
+
       
 #ifdef USE_MYTIMER
   // start the timer 0, prescaler
