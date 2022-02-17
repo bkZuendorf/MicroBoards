@@ -194,17 +194,15 @@ void gotoSleep()
   PORTB|=(1<<PORTB2);
   tr.allOff();
   
-  cli();                      // Disable interrupts  
-    GIFR &= ~(1<<PCIF0);
-    MCUCR |= (1 << SM1); // set_sleep_mode(SLEEP_MODE_PWR_DOWN);   
-    MCUCR |= (1 << SE); //  sleep_enable();                        Sets the Sleep Enable bit in the MCUCR Register (SE BIT)
-  sei();                      // Enable interrupts
-  
-  sleep_cpu();                // sleep
-
-  cli();                      // Disable interrupts
-    MCUCR &=~(1 << SE); //    sleep_disable();                        // Clear SE bit
-  sei();                      // Enable interrupts
+  ADCSRA = 0;           // turn off ADC
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);     
+  cli();                // Disable interrupts  
+  GIFR &= ~(1<<PCIF0);  // Reset pin change interrupt
+  sleep_enable();       // sleep
+  sleep_bod_disable();
+  sei();                // Enable interrupts
+  sleep_cpu();
+  sleep_disable();
   
   aufgewacht=true;
   letzterSensorwertWechsel=millis();
