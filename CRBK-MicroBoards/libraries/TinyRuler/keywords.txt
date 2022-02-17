@@ -1,26 +1,30 @@
 #######################################
-# Syntax Coloring Map For LedControl
+# Syntax Coloring Map For TinyRuler
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-LedControl	KEYWORD1
+TinyRuler	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-shutdown	KEYWORD2
-setScanLimit	KEYWORD2
-setIntensity	KEYWORD2
-clearDisplay	KEYWORD2
-setLed		KEYWORD2
-setRow		KEYWORD2
-setColumn	KEYWORD2
-setDigit	KEYWORD2
-setChar		KEYWORD2
+
+animate			KEYWORD2
+handle			KEYWORD2
+init			KEYWORD2
+setAll			KEYWORD2
+resetAll		KEYWORD2
+set				KEYWORD2
+get				KEYWORD2
+toggle			KEYWORD2
+reset			KEYWORD2
+setStatus		KEYWORD2
+resetStatus		KEYWORD2
+getSensorStatus	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
