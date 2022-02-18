@@ -3,8 +3,8 @@
 
 class TinyRuler {
     void gotoSleep();
-    static int          stabilerSensorWert;
-    static bool         letzterSensorWert;
+    static bool          stabilerSensorWert;
+    static bool          letzterSensorWert;
     static unsigned long letzterSensorwertWechsel;
 
 public:
