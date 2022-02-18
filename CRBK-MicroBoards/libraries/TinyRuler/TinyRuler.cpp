@@ -16,7 +16,7 @@ Run   defaultAnimation;
 Flash flash;
 TinyRuler tr;
 
-int           TinyRuler::stabilerSensorWert = -1;
+bool          TinyRuler::stabilerSensorWert = false;
 bool          TinyRuler::letzterSensorWert = false;
 unsigned long TinyRuler::letzterSensorwertWechsel = 0;
 
@@ -193,15 +193,14 @@ bool TinyRuler::handle(unsigned int sleepDelay) {
   if(letzterSensorWert!=sensor) {
     letzterSensorwertWechsel=mymillis();
     letzterSensorWert=sensor;
-    stabilerSensorWert=-1;
   } else if((mymillis()-letzterSensorwertWechsel)>500) {
-    stabilerSensorWert = letzterSensorWert ? 1 : 0;
+    stabilerSensorWert = letzterSensorWert;
   }
   
   if(mymillis()>5000) {
     // gehe in den Schlaf wenn der Lagesensor 5s nach der Startphase
     // eindeutiges Signal liefert, oder wenn 20 Sekunden lang nichts passiert ist
-    if( (stabilerSensorWert==1 && (mymillis()-letzterSensorwertWechsel)>sleepDelay) ||
+    if( (stabilerSensorWert && (mymillis()-letzterSensorwertWechsel)>sleepDelay) ||
         (mymillis()-letzterSensorwertWechsel)>20000) {
       gotoSleep();
       geradeErwacht=true;
@@ -266,8 +265,7 @@ bool TinyRuler::getSensorValue() {
 }
 
 bool TinyRuler::getSensor() {
-  // gibt den stabilen Sensorwert zurück, falls nicht vorhanden, den instabilen Wert
-  return stabilerSensorWert>=0 ? (stabilerSensorWert==1) : getSensorValue();
+  return stabilerSensorWert;
 }
 
 //Attiny in den Schlafmodus setzen
@@ -294,5 +292,5 @@ void TinyRuler::gotoSleep()
    // init sensor state variables
   letzterSensorwertWechsel = mymillis();
   letzterSensorWert = getSensorValue();
-  stabilerSensorWert = -1;
+  stabilerSensorWert = letzterSensorWert;
 }
