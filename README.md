@@ -1,4 +1,4 @@
-# MicroBoards
+# CRBK-MicroBoards
 
 In diesem Projekt werden µC-Boards bereitgestellt, die im Rahmen des Unterrichts am CRBK entstanden sind.
 
