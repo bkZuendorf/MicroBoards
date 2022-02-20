@@ -19,6 +19,6 @@ Das [Video](https://www.abitur-am-berufskolleg.info/wp-content/uploads/2021/11/T
 
 Zur Verwendung des TinyRuler ist die Installation eines Treibers erforderlich. Dies kann entsprechend der Anleitung auf der Original-Bootloader Seite [Micronucleus]([https://github.com/micronucleus/micronucleus/tree/master/windows_driver_installer) erfolgen.
 
-![Schematic](https://github.com/bkZuendorf/MicroBoards/documentation/TinyRuler/PCB-Layout/TinyRuler_schematic.png)
-![Board](https://github.com/bkZuendorf/MicroBoards/documentation/TinyRuler/PCB-Layout/TinyRuler_board.png)
+![Schematic](https://github.com/bkZuendorf/MicroBoards/blob/main/documentation/TinyRuler/PCB-Layout/TinyRuler_schematic.png)
+![Board](https://github.com/bkZuendorf/MicroBoards/blob/main/documentation/TinyRuler/PCB-Layout/TinyRuler_board.png)
 Das [Eagle Layout](https://github.com/bkZuendorf/MicroBoards/documentation/TinyRuler/PCB-Layout) kann verwendet werden, um die Platine nachzubauen.
