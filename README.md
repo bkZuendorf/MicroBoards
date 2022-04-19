@@ -2,7 +2,7 @@
 
 In diesem Projekt werden µC-Boards bereitgestellt, die im Rahmen des Unterrichts am CRBK entstanden sind.
 
-## Integration der Boards in die Arduino IED
+## Integration der Boards in die Arduino IDE
 Um die Boards innerhalb der Arduino IDE nutzen zu können, müssen folgende Schritte durchgeführt werden:
 - Ergänzung der Boardverwalter URL in der Arduino-IDE (unter Datei/Voreinstellungen) um die Adresse zur JSON Datei: https://raw.githubusercontent.com/bkZuendorf/MicroBoards/main/package_crbk_index.json
 - Öffne in der Arduino-IDE unter Werkzeuge/Board/ den Boardverwalter
